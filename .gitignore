@@ -1,0 +1,8 @@
+# Virtual Enviroment folders and files
+/Include/
+/Lib/
+/Scripts/
+/pyvenv.cfg
+
+# PyCharm Project folders and files
+/.idea/
