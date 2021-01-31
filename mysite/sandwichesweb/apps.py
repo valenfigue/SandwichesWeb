@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class SandwicheswebConfig(AppConfig):
+class SandwichesWebConfig(AppConfig):
     name = 'sandwichesweb'
