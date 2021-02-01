@@ -427,7 +427,7 @@ class Ingredient(BaseEntity):
 	"""
 	# Clases
 	class Meta(BaseEntity.Meta):
-		db_table = 'SW_INGREDIENTS'.lower()
+		db_table = 'SW_INGREDIENT'.lower()
 		verbose_name = 'Ingredient'
 		verbose_name_plural = 'Ingredients'
 	
