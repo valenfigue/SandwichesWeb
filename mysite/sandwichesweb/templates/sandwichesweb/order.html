@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="VE" xml:lang="VE" xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Sándwiches Virtuales | Pedidos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md sticky-top">
+        <div class="container"><img id="logo" src="{% static 'sandwichesweb/images/logo.png' %}"><a class="navbar-brand" href="{% url 'sandwichesweb:index' %}"><strong>Sándwiches&nbsp;Virtuales</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'sandwichesweb:order' %}" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Reportes</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="order-operations">
+        <div id="order-header">
+            <h1 class="text-center" id="order-number">Pedido N° {{ order.number }}</h1>
+            <p>Escoge <strong>UN (1)</strong> solo producto de la lista a continuación para cada pedido</p>
+        </div>
+        <div class="container" id="list-products">
+
+            <form method="post">
+{#            <form action="{% url 'sandwichesweb:selection' sandwich.id %}" method="post">#}
+{#                {% csrf_token %}#}
+
+{#                <div id="combos">#}
+{#                    <h2 class="product-type">Combos</h2>#}
+{#                    <div class="form-row">#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-2"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+
+                <div class="product-name" id="sandwiches">
+                    <h2 class="product-type" id="sandwiches">Sándwiches</h2>
+                    <div class="form-row">
+                        {% csrf_token %}
+                        {% for sandwich in sandwiches_list %}
+{#                                <div class="col"><img alt="">#}
+                                <div class="form-check">
+{#                                    <input class="form-check-input" type="radio" name="sandwich" id="sandwich{{ forloop.counter }}" value="{{ sandwich.id }}">#}
+{#                                    <label class="form-check-label" for="sandwich{{ forloop.counter }}">#}
+                                    <a href="{% url 'sandwichesweb:selection' sandwich.id 'sandwich' %}">
+                                        {{ sandwich.size }}
+                                    </a>
+{#                                    </label>#}
+                                </div>
+                                <br>
+                                <p class="price-product" id="sandwich{{ forloop.counter }}-price">
+                                    <strong>
+                                        {{ sandwich.price }}
+                                    </strong>
+                                </p>
+{#                              </div>#}
+{#                            <br>#}
+                        {% endfor %}
+                    </div>
+                </div>
+
+{#                <div class="form-group product-name" id="drinks">#}
+{#                    <h2 class="product-type">Bebidas</h2>#}
+{#                    <h4 class="drink-type">Jugos</h4>#}
+{#                    <div class="form-row">#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-5"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-6"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="form-group product-name" id="side_dishes">#}
+{#                    <h2 class="product-type">Acompañantes</h2>#}
+{#                    <div class="form-row">#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-3"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                        <div class="col"><img>#}
+{#                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-4"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>#}
+{#                            <p><strong>$ 40</strong></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                  </div>#}
+
+                {# BOTONES #}
+                <div class="btn-group" role="group">
+{#                    <a href="{% url 'sandwichesweb:selection' sandwich.id %}">#}
+{#                        <button class="btn btn-primary" id="next" type="sumit">#}
+{#                            Continuar#}
+{#                        </button>#}
+{#                    </a>#}
+{##}
+{#                    <button class="btn btn-primary" id="add-product" type="sumit">#}
+{#                        Agregar otro producto#}
+{#                    </button>#}
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'sandwichesweb/bs-init.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</body>
+
+</html>

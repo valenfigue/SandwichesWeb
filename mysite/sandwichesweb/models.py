@@ -785,3 +785,6 @@ class Detail(BaseEntity):
 		# related_name='factura',
 		# related_query_name='bill'
 	)
+
+# class OrderTemp:
+#
