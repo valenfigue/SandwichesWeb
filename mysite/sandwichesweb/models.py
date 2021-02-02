@@ -760,6 +760,11 @@ class Detail(BaseEntity):
 		choices=Product.ListProducts.choices,
 		default=Product.ListProducts.SANDWICH.value
 	)
+	name = models.CharField(
+		"nombre del producto",
+		max_length=30,
+		null=True
+	)
 	size = models.CharField(
 		"tamaño del producto",
 		max_length=30,
