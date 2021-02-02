@@ -4,7 +4,7 @@ from .models import *
 
 admin.site.register(Addition)
 admin.site.register(Bill)
-admin.site.register(Client)
+# admin.site.register(Client)
 admin.site.register(Combo)
 admin.site.register(Detail)
 admin.site.register(Drink)

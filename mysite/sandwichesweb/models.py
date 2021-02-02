@@ -19,54 +19,54 @@ class BaseEntity(models.Model):
 	is_activated = models.BooleanField(default=True)
 
 
-class Client(BaseEntity):
-	"""Cliente que realiza el pedido.
-	"""
-	# Clases
-	class Meta(BaseEntity.Meta):
-		db_table = 'sw_client'
-		verbose_name = 'Cliente'
-		verbose_name_plural = 'Clientes'
-	
-	# Atributos de la clase:
-	id_doc = models.IntegerField(
-		"número de identificación",
-		unique=True,
-		help_text="Por favor, solo ingrese el valor numérico de su número de identificación."
-	)
-	first_name = models.CharField(
-		"primer nombre",
-		max_length=30
-	)
-	middle_name = models.CharField(
-		"segundo nombre",
-		max_length=30,
-		null=True
-	)
-	surname = models.CharField(
-		"primer apellido",
-		max_length=30
-	)
-	second_surname = models.CharField(
-		"segundo apellido",
-		max_length=30,
-		null=True
-	)
-	
-	# Métodos
-	def client_name(self) -> str:
-		"""Retorna el nombre completo del cliente
-		
-		:return: nombre completo del cliente.
-		:rtype: str
-		"""
-		complete_name = self.first_name + " " + ((self.middle_name + " ") if self.middle_name else "") + \
-			self.surname + ((" " + self.second_surname) if self.second_surname else "")
-		
-		return complete_name
-	
-	def __str__(self):
-		return str(self.id_doc) + " | " + self.client_name()
+# class Client(BaseEntity):
+# 	"""Cliente que realiza el pedido.
+# 	"""
+# 	# Clases
+# 	class Meta(BaseEntity.Meta):
+# 		db_table = 'sw_client'
+# 		verbose_name = 'Cliente'
+# 		verbose_name_plural = 'Clientes'
+#
+# 	# Atributos de la clase:
+# 	id_doc = models.IntegerField(
+# 		"número de identificación",
+# 		unique=True,
+# 		help_text="Por favor, solo ingrese el valor numérico de su número de identificación."
+# 	)
+# 	first_name = models.CharField(
+# 		"primer nombre",
+# 		max_length=30
+# 	)
+# 	middle_name = models.CharField(
+# 		"segundo nombre",
+# 		max_length=30,
+# 		null=True
+# 	)
+# 	surname = models.CharField(
+# 		"primer apellido",
+# 		max_length=30
+# 	)
+# 	second_surname = models.CharField(
+# 		"segundo apellido",
+# 		max_length=30,
+# 		null=True
+# 	)
+#
+# 	# Métodos
+# 	def client_name(self) -> str:
+# 		"""Retorna el nombre completo del cliente
+#
+# 		:return: nombre completo del cliente.
+# 		:rtype: str
+# 		"""
+# 		complete_name = self.first_name + " " + ((self.middle_name + " ") if self.middle_name else "") + \
+# 			self.surname + ((" " + self.second_surname) if self.second_surname else "")
+#
+# 		return complete_name
+#
+# 	def __str__(self):
+# 		return str(self.id_doc) + " | " + self.client_name()
 
 
 class Purchase(BaseEntity):
@@ -90,13 +90,13 @@ class Purchase(BaseEntity):
 	)
 	
 	# Relaciones
-	client = models.ForeignKey(
-		'Client',
-		on_delete=models.CASCADE,
-		limit_choices_to={
-			'is_activated': True
-		}
-	)
+	# client = models.ForeignKey(
+	# 	'Client',
+	# 	on_delete=models.CASCADE,
+	# 	limit_choices_to={
+	# 		'is_activated': True
+	# 	}
+	# )
 
 
 class Product(BaseEntity):
@@ -671,6 +671,32 @@ class Bill(BaseEntity):
 		"total de la compra",
 		max_digits=9,
 		decimal_places=2
+	)
+	
+	# Atributos relacionados con el cliente
+	ci_client = models.IntegerField(
+		"número de identificación del cliente",
+		# unique=True,
+		help_text="Por favor, solo ingrese el valor numérico de su número de identificación.",
+		# default=0,
+	)
+	first_name_client = models.CharField(
+		"primer nombre del cliente",
+		max_length=30
+	)
+	middle_name_client = models.CharField(
+		"segundo nombre del cliente",
+		max_length=30,
+		null=True
+	)
+	surname_client = models.CharField(
+		"primer apellido del cliente",
+		max_length=30
+	)
+	second_surname_client = models.CharField(
+		"segundo apellido del cliente",
+		max_length=30,
+		null=True
 	)
 	
 	# Relaciones
