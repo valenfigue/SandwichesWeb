@@ -83,11 +83,11 @@ class Purchase(BaseEntity):
 		"fecha y hora de compra",
 		auto_now_add=True
 	)
-	total = models.DecimalField(
-		"total de la compra",
-		max_digits=9,
-		decimal_places=2
-	)
+	# total = models.DecimalField(
+	# 	"total de la compra",
+	# 	max_digits=9,
+	# 	decimal_places=2
+	# )
 	
 	# Relaciones
 	# client = models.ForeignKey(
@@ -436,6 +436,17 @@ class Addition(BaseEntity):
 		# related_query_name='sandwich'
 	)
 
+	order = models.ForeignKey(
+		'Order',
+		on_delete=models.CASCADE,
+		limit_choices_to={
+			'is_activated': True
+		},
+		null=True,
+		related_name='order',
+		related_query_name='order'
+	)
+
 
 class Order(BaseEntity):
 	"""Orden realizada por el cliente.
@@ -472,16 +483,6 @@ class Order(BaseEntity):
 		null=True,
 		# related_name='compra',
 		# related_query_name='purchase'
-	)
-	sandwich = models.ForeignKey(
-		'Sandwich',
-		on_delete=models.CASCADE,
-		limit_choices_to={
-			'is_activated': True
-		},
-		null=True,
-		related_name='sándwich',
-		related_query_name='sandwich'
 	)
 	drink = models.ForeignKey(
 		'Drink',
