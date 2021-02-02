@@ -25,8 +25,8 @@ class Client(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'sw_client'
-		verbose_name = 'Client'
-		verbose_name_plural = 'Clients'
+		verbose_name = 'Cliente'
+		verbose_name_plural = 'Clientes'
 	
 	# Atributos de la clase:
 	id_doc = models.IntegerField(
@@ -75,8 +75,8 @@ class Purchase(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'sw_purchase'
-		verbose_name = 'Purchase'
-		verbose_name_plural = 'Purchases'
+		verbose_name = 'Compra'
+		verbose_name_plural = 'Compras'
 	
 	# Atributos
 	date = models.DateTimeField(
@@ -108,54 +108,18 @@ class Product(BaseEntity):
 	class Meta(BaseEntity.Meta):
 		abstract = True
 	
-	class ListProducts(models.IntegerChoices):
-		SANDWICH = 1, 'Sándwich'
-		DRINK = 2, 'Bebida'
-		SIDE_DISH = 3, 'Acompañante'
-		COMBO = 4, 'Combo'
+	class ListProducts(models.TextChoices):
+		SANDWICH = 'Sándwich', 'Sándwich'
+		DRINK = 'Bebida', 'Bebida'
+		SIDE_DISH = 'Acompañante', 'Acompañante'
+		COMBO = 'Combo', 'Combo'
 	
 	# Atributos
-	name = models.CharField(
-		"nombre del producto en venta",
-		max_length=30
-	)
-	photo = models.ImageField(
-		"foto del producto",
-		upload_to='uploads/',
-		null=True
-	)
-	
-	# Métodos
-
-
-class Size(BaseEntity):
-	"""Tamaño del sándwich o de la bebida (para esta versión de la aplicación).
-	"""
-	# Clases
-	class Meta(BaseEntity.Meta):
-		db_table = 'sw_size'
-		verbose_name = 'Size'
-		verbose_name_plural = 'Sizes'
-	
-	class ListProducts(models.IntegerChoices):
-		"""Lista de productos que poseen tamaños con precios.
-		"""
-		SANDWICH = Product.ListProducts.SANDWICH
-		DRINK = Product.ListProducts.DRINK
-	
-	# Atributos
-	name = models.CharField(
-		"tamaño del producto",
-		max_length=30
-	)
-	product = models.IntegerField(
-		"producto",
-		choices=ListProducts.choices
-	)
 	price = models.DecimalField(
 		"precio",
 		max_digits=9,
-		decimal_places=2
+		decimal_places=2,
+		default=0
 	)
 	photo = models.ImageField(
 		"foto del producto",
@@ -164,56 +128,35 @@ class Size(BaseEntity):
 	)
 	
 	# Métodos
-	def get_product_name(self) -> str:
-		"""Obtiene el tipo de producto al que está relacionado este tamaño.
-		
-		Toma el valor del producto del registro, y lo compara con las opciones de la clase ListProducts, en Size.
-		
-		:return: El tipo de producto.
-		:rtype: str
-		"""
-		for product in self.ListProducts.choices:
-			if self.product == product[0]:
-				return product[1]
-	
-	def __str__(self):
-		return self.get_product_name() + " " + self.name
-	
-	
+
+
 class Sandwich(Product):
 	"""Sándwiches a vender en la tienda.
 	"""
 	# Clases
 	class Meta(Product.Meta):
 		db_table = 'sw_sandwich'
-		verbose_name = 'Sandwich'
-		verbose_name_plural = 'Sandwiches'
+		verbose_name = 'Sándwich'
+		verbose_name_plural = 'Sándwiches'
 	
 	# Atributos
-	name = None
-	type_product = models.IntegerField(
-		"producto",
-		default=Product.ListProducts.SANDWICH.value
+	size = models.CharField(
+		"tamaño del sándwich",
+		max_length=30
 	)
 	
 	# Relaciones
-	size = models.ForeignKey(  # Tamaño del sándwich
-		Size,
-		on_delete=models.CASCADE,
-		limit_choices_to={
-			'is_activated': True,
-			'product': Size.ListProducts.SANDWICH.value
-		}
-	)
 	ingredients = models.ManyToManyField(  # Ingredientes del sándwich.
 		'Ingredient',
 		through='Addition',
 		through_fields=('sandwich', 'ingredient'),
+		# related_name='ingredientes del sándwich',
+		# related_query_name='ingredients'
 	)
 	
 	# Métodos
 	@staticmethod
-	def type_product_name() -> str:
+	def product_type_name() -> str:
 		"""Obtiene el nombre del tipo de producto, de la lista de productos de la clase Product.
 		
 		:return: Sándwich.
@@ -222,7 +165,7 @@ class Sandwich(Product):
 		return Product.ListProducts.SANDWICH.label
 		
 	def __str__(self):
-		return self.type_product_name
+		return self.product_type_name() + " " + self.size
 
 
 class Drink(Product):
@@ -231,51 +174,36 @@ class Drink(Product):
 	# Clases
 	class Meta(Product.Meta):
 		db_table = 'sw_drink'
-		verbose_name = 'Drink'
-		verbose_name_plural = 'Drinks'
+		verbose_name = 'Bebida'
+		verbose_name_plural = 'Bebidas'
 	
-	class ListTypeDrinks(models.IntegerChoices):
-		SODA = 1, "Refresco"
-		JUICE = 2, "Jugo"
-		COFFEE = 3, "Café"
-		WATER = 4, "Agua"
+	class ListDrinkType(models.TextChoices):
+		SODA = 'Refresco', 'Refresco',
+		JUICE = 'Jugo', 'Jugo',
+		COFFEE = 'Café', 'Café',
+		WATER = 'Agua', 'Agua',
 	
 	# Atributos
-	type_product = models.IntegerField(
-		"producto",
-		default=Product.ListProducts.DRINK.value
+	name = models.CharField(
+		"bebida",
+		max_length=30
 	)
-	type_drink = models.IntegerField(
+	drink_type = models.CharField(
 		"tipo de bebida",
-		choices=ListTypeDrinks.choices
+		max_length=30,
+		choices=ListDrinkType.choices,
+		default=ListDrinkType.SODA.value,
 	)
+	# size = models.CharField(
+	# 	"tamaño de la bebida",
+	# 	max_length=30
+	# )
 	
 	# Relaciones
-	size = models.ForeignKey(
-		Size,
-		on_delete=models.CASCADE,
-		limit_choices_to={
-			'is_activated': True,
-			'product': Size.ListProducts.DRINK.value
-		}
-	)
 	
 	# Métodos
-	def get_type_drink_name(self) -> str:
-		"""Obtiene el tipo de bebida al que pertenece la instancia.
-
-		Toma el valor del tipo de bebida (type_drink) del registro, y lo compara con las opciones de la clase
-		ListTypeDrinks, en Drink.
-
-		:return: El tipo de producto.
-		:rtype: str
-		"""
-		for type_drink in self.ListTypeDrinks:
-			if self.type_drink == type_drink[0]:
-				return type_drink[1]
-	
 	@staticmethod
-	def type_product_name() -> str:
+	def product_type_name() -> str:
 		"""Obtiene el nombre del tipo de producto, de la lista de productos de la clase Product.
 
 		:return: Bebida.
@@ -284,7 +212,7 @@ class Drink(Product):
 		return Product.ListProducts.DRINK.label
 	
 	def __str__(self):
-		return self.get_type_drink_name() + ": " + self.name
+		return self.drink_type + ": " + self.name
 
 
 class SideDish(Product):
@@ -293,23 +221,18 @@ class SideDish(Product):
 	# Clases
 	class Meta(Product.Meta):
 		db_table = 'sw_side_dish'
-		verbose_name = 'Side Dish'
-		verbose_name_plural = 'Side Dishes'
+		verbose_name = 'Acompañante'
+		verbose_name_plural = 'Acompañantes'
 	
 	# Atributos
-	type_product = models.IntegerField(
-		"producto",
-		default=Product.ListProducts.SIDE_DISH.value
-	)
-	price = models.DecimalField(
-		"precio",
-		max_digits=9,
-		decimal_places=2
+	name = models.CharField(
+		"nombre",
+		max_length=30
 	)
 	
 	# Métodos
 	@staticmethod
-	def type_product_name() -> str:
+	def product_type_name() -> str:
 		"""Obtiene el nombre del tipo de producto, de la lista de productos de la clase Product.
 
 		:return: Acompañante.
@@ -331,36 +254,38 @@ class Combo(Product):
 		verbose_name_plural = 'Combos'
 	
 	# Atributos
-	type_product = models.IntegerField(
-		"producto",
-		default=Product.ListProducts.COMBO.value
-	)
-	price = models.DecimalField(
-		"precio",
-		max_digits=9,
-		decimal_places=2
+	name = models.CharField(
+		"nombre del combo",
+		max_length=30,
+		help_text="evite usar la palabra 'combo' para dar un nombre. (Ej. 'Chamito')."
 	)
 	
 	# Relaciones
 	sandwiches = models.ManyToManyField(  # Sándwiches del combo.
 		'Sandwich',
 		through='ProductsInCombo',
-		through_fields=('combo', 'sandwich')
+		through_fields=('combo', 'sandwich'),
+		# related_name='sandwiches del combo',
+		# related_query_name='sandwiches'
 	)
 	drinks = models.ManyToManyField(
 		'Drink',
 		through='ProductsInCombo',
-		through_fields=('combo', 'drink')
+		through_fields=('combo', 'drink'),
+		# related_name='bebidas del combo',
+		# related_query_name='drinks'
 	)
 	side_dishes = models.ManyToManyField(
 		'SideDish',
 		through='ProductsInCombo',
-		through_fields=('combo', 'side_dish')
+		through_fields=('combo', 'side_dish'),
+		# related_name='acompañantes del combo',
+		# related_query_name='side_dishes'
 	)
 	
 	# Métodos
 	@staticmethod
-	def type_product_name() -> str:
+	def product_type_name() -> str:
 		"""Obtiene el nombre del tipo de producto, de la lista de productos de la clase Product.
 
 		:return: Combo.
@@ -369,7 +294,7 @@ class Combo(Product):
 		return Product.ListProducts.COMBO.label
 
 	def __str__(self):
-		return self.name
+		return self.product_type_name() + self.name
 
 
 class ProductsInCombo(BaseEntity):
@@ -380,8 +305,31 @@ class ProductsInCombo(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_PRODUCTS_IN_COMBO'.lower()
-		verbose_name = 'Products in combo'
+		verbose_name = 'Productos en combo'
 		verbose_name_plural = verbose_name
+		
+		# constraints = [
+		# 	models.CheckConstraint(
+		# 		name="%(app_label)s_%(class)s_product_included",
+		# 		check=(
+		# 			models.Q(
+		# 				sandwich__isnull=False,
+		# 				drink__isnull=True,
+		# 				side_dish__isnull=True,
+		# 			),
+		# 			models.Q(
+		# 				sandwich__isnull=True,
+		# 				drink__isnull=False,
+		# 				side_dish__isnull=True,
+		# 			),
+		# 			models.Q(
+		# 				sandwich__isnull=True,
+		# 				drink__isnull=True,
+		# 				side_dish__isnull=False,
+		# 			)
+		# 		),
+		# 	)
+		# ]
 	
 	# Atributos
 
@@ -392,7 +340,9 @@ class ProductsInCombo(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='combo',
+		# related_query_name='combo'
 	)
 	sandwich = models.ForeignKey(
 		'Sandwich',
@@ -400,7 +350,9 @@ class ProductsInCombo(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='sándwich',
+		# related_query_name='sandwich'
 	)
 	drink = models.ForeignKey(
 		'Drink',
@@ -408,7 +360,9 @@ class ProductsInCombo(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='bebida',
+		# related_query_name='drink',
 	)
 	side_dish = models.ForeignKey(
 		'SideDish',
@@ -416,7 +370,9 @@ class ProductsInCombo(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='acompañante',
+		# related_query_name='side_dish'
 	)
 	
 	# Métodos
@@ -428,8 +384,8 @@ class Ingredient(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_INGREDIENT'.lower()
-		verbose_name = 'Ingredient'
-		verbose_name_plural = 'Ingredients'
+		verbose_name = 'Ingrediente'
+		verbose_name_plural = 'Ingredientes'
 	
 	# Atributos
 	name = models.CharField(
@@ -455,8 +411,8 @@ class Addition(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_ADDITION'.lower()
-		verbose_name = 'Addition'
-		verbose_name_plural = 'Additions'
+		verbose_name = 'Adicional'
+		verbose_name_plural = 'Adicionales'
 	
 	# Atributos
 	
@@ -466,14 +422,18 @@ class Addition(BaseEntity):
 		on_delete=models.CASCADE,
 		limit_choices_to={
 			'is_activated': True
-		}
+		},
+		# related_name='ingrediente',
+		# related_query_name='ingredient'
 	)
 	sandwich = models.ForeignKey(
 		'Sandwich',
 		on_delete=models.CASCADE,
 		limit_choices_to={
 			'is_activated': True
-		}
+		},
+		# related_name='sándwich',
+		# related_query_name='sandwich'
 	)
 
 
@@ -483,8 +443,8 @@ class Order(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'sw_order'
-		verbose_name = 'Order'
-		verbose_name_plural = 'Orders'
+		verbose_name = 'Pedido'
+		verbose_name_plural = 'Pedidos'
 	
 	# Atributos
 	number = models.IntegerField(
@@ -509,7 +469,9 @@ class Order(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='compra',
+		# related_query_name='purchase'
 	)
 	sandwich = models.ForeignKey(
 		'Sandwich',
@@ -517,7 +479,9 @@ class Order(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		related_name='sándwich',
+		related_query_name='sandwich'
 	)
 	drink = models.ForeignKey(
 		'Drink',
@@ -525,7 +489,9 @@ class Order(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='bebida',
+		# related_query_name='drink'
 	)
 	side_dish = models.ForeignKey(
 		'SideDish',
@@ -533,7 +499,9 @@ class Order(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='acompañante',
+		# related_query_name='side_dish'
 	)
 	combo = models.ForeignKey(
 		'Combo',
@@ -541,7 +509,9 @@ class Order(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		null=True
+		null=True,
+		# related_name='combo',
+		# related_query_name='combo'
 	)
 
 
@@ -551,8 +521,8 @@ class ScheduleProm(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_SCHEDULE_PROM'.lower()
-		verbose_name = 'SCHEDULE'.capitalize()
-		verbose_name_plural = 'SCHEDULES'.capitalize()
+		verbose_name = 'Horario'
+		verbose_name_plural = 'Horarios'
 	
 	# Atributos
 	start_hour = models.TimeField(  # Hora en el que inicia la oferta, los días seleccionados.
@@ -599,8 +569,8 @@ class Promotion(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_Promotion'.lower()
-		verbose_name = 'Promotion'.capitalize()
-		verbose_name_plural = 'Promotions'.capitalize()
+		verbose_name = 'Oferta'
+		verbose_name_plural = 'Ofertas'
 	
 	# Atributos
 	name = models.CharField(
@@ -632,7 +602,9 @@ class Promotion(BaseEntity):
 		on_delete=models.CASCADE,
 		limit_choices_to={
 			'is_activated': True
-		}
+		},
+		# related_name='horario de la oferta',
+		# related_query_name='schedule'
 	)
 
 	# Métodos
@@ -655,8 +627,8 @@ class PromApplication(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_PROM_APPLICATION'.lower()
-		verbose_name = 'PROMOTION APPLICATION'.lower()
-		verbose_name_plural = 'PROMOTION APPLICATIONS'.lower()
+		verbose_name = 'Aplicación de oferta'.lower()
+		verbose_name_plural = 'Aplicaciones de oferta'.lower()
 	
 	# Atributos
 	
@@ -666,14 +638,18 @@ class PromApplication(BaseEntity):
 		on_delete=models.CASCADE,
 		limit_choices_to={
 			'is_activated': True
-		}
+		},
+		# related_name='pedido al que se le aplicó la oferta',
+		# related_query_name='order'
 	)
 	promotion = models.ForeignKey(
 		Promotion,
 		on_delete=models.CASCADE,
 		limit_choices_to={
 			'is_activated': True
-		}
+		},
+		# related_name='oferta aplicada',
+		# related_query_name='promotion'
 	)
 
 
@@ -683,8 +659,8 @@ class Bill(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_BILL'.lower()
-		verbose_name = 'Bill'
-		verbose_name_plural = 'Bills'
+		verbose_name = 'Factura'
+		verbose_name_plural = 'Facturas'
 	
 	# Atributos
 	date = models.DateTimeField(
@@ -704,8 +680,8 @@ class Bill(BaseEntity):
 		limit_choices_to={
 			'is_activated': True
 		},
-		related_name='purchase',
-		related_query_name='purchase',
+		# related_name='compra',
+		# related_query_name='purchase',
 	)
 
 
@@ -715,12 +691,14 @@ class QuantityOfProducts(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_QUANTITY_OF_PRODUCTS'.lower()
-		verbose_name = 'QUANTITY OF PRODUCTS'.capitalize()
+		verbose_name = 'Cantidad de productos comprados'
 		verbose_name_plural = verbose_name
 	
 	product = models.CharField(
 		"tipo de producto",
-		max_length=30
+		max_length=30,
+		choices=Product.ListProducts.choices,
+		default=Product.ListProducts.SANDWICH.value
 	)
 	quantity = models.IntegerField(
 		"cantidad de este tipo de producto",
@@ -730,7 +708,12 @@ class QuantityOfProducts(BaseEntity):
 	# Relaciones
 	bill = models.ForeignKey(
 		'Bill',
-		on_delete=models.CASCADE
+		on_delete=models.CASCADE,
+		limit_choices_to={
+			'is_activated': True
+		},
+		# related_name='factura',
+		# related_query_name='bill'
 	)
 
 
@@ -740,13 +723,15 @@ class Detail(BaseEntity):
 	# Clases
 	class Meta(BaseEntity.Meta):
 		db_table = 'SW_DETAIL'.lower()
-		verbose_name = 'Detail'
-		verbose_name_plural = 'Details'
+		verbose_name = 'Detalle de factura'
+		verbose_name_plural = 'Detalles de factura'
 	
 	# Atributos
 	product = models.CharField(
 		"tipo de producto",
-		max_length=30
+		max_length=30,
+		choices=Product.ListProducts.choices,
+		default=Product.ListProducts.SANDWICH.value
 	)
 	size = models.CharField(
 		"tamaño del producto",
@@ -767,5 +752,10 @@ class Detail(BaseEntity):
 	# Relaciones
 	bill = models.ForeignKey(
 		'Bill',
-		on_delete=models.CASCADE
+		on_delete=models.CASCADE,
+		limit_choices_to={
+			'is_activated': True
+		},
+		# related_name='factura',
+		# related_query_name='bill'
 	)
