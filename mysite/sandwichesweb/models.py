@@ -98,6 +98,10 @@ class Purchase(BaseEntity):
 	# 	}
 	# )
 
+	# Métodos
+	def __str__(self):
+		return "Compra del " + str(date)
+
 
 class Product(BaseEntity):
 	"""Producto a vender en la tienda.
@@ -294,7 +298,7 @@ class Combo(Product):
 		return Product.ListProducts.COMBO.label
 
 	def __str__(self):
-		return self.product_type_name() + self.name
+		return self.product_type_name() + " " + self.name
 
 
 class ProductsInCombo(BaseEntity):
@@ -307,29 +311,6 @@ class ProductsInCombo(BaseEntity):
 		db_table = 'SW_PRODUCTS_IN_COMBO'.lower()
 		verbose_name = 'Productos en combo'
 		verbose_name_plural = verbose_name
-		
-		# constraints = [
-		# 	models.CheckConstraint(
-		# 		name="%(app_label)s_%(class)s_product_included",
-		# 		check=(
-		# 			models.Q(
-		# 				sandwich__isnull=False,
-		# 				drink__isnull=True,
-		# 				side_dish__isnull=True,
-		# 			),
-		# 			models.Q(
-		# 				sandwich__isnull=True,
-		# 				drink__isnull=False,
-		# 				side_dish__isnull=True,
-		# 			),
-		# 			models.Q(
-		# 				sandwich__isnull=True,
-		# 				drink__isnull=True,
-		# 				side_dish__isnull=False,
-		# 			)
-		# 		),
-		# 	)
-		# ]
 	
 	# Atributos
 
@@ -376,6 +357,12 @@ class ProductsInCombo(BaseEntity):
 	)
 	
 	# Métodos
+	def __str__(self):
+		return "Combinación N° " + str(self.id) + \
+		       " - Combo " + self.combo.name + ". " + \
+		       (("Sándwich: " + self.sandwich.size + ", ") if self.sandwich else "") + \
+		       (("Bebida: " + self.drink.name + ", ") if self.drink else "") + \
+		       (("Acompañante: " + self.side_dish.name) if self.side_dish else "")
 
 
 class Ingredient(BaseEntity):
@@ -446,6 +433,10 @@ class Addition(BaseEntity):
 		related_name='order',
 		related_query_name='order'
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Extra de " + self.ingredient.name + " para sándwich " + self.sandwich.size + ". ID: " + str(self.id)
 
 
 class Order(BaseEntity):
@@ -514,6 +505,10 @@ class Order(BaseEntity):
 		# related_name='combo',
 		# related_query_name='combo'
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Pedido (" + str(self.id) + ") N° " + str(self.number)
 
 
 class ScheduleProm(BaseEntity):
@@ -562,6 +557,17 @@ class ScheduleProm(BaseEntity):
 		"domingo",
 		default=False
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Horario " + str(self.id) + " de los días " + \
+		       ("lunes, " if self.monday else "") + \
+		       ("martes, " if self.tuesday else "") + \
+		       ("miércoles, " if self.wednesday else "") + \
+		       ("jueves, " if self.thursday else "") + \
+		       ("viernes, " if self.friday else "") + \
+		       ("sábados, " if self.saturday else "") + \
+		       ("domingos " if self.sunday else "")
 
 
 class Promotion(BaseEntity):
@@ -618,6 +624,9 @@ class Promotion(BaseEntity):
 		"""
 		today = date.today()
 		return today <= self.end_date
+	
+	def __str__(self):
+		return self.name
 
 
 class PromApplication(BaseEntity):
@@ -652,6 +661,10 @@ class PromApplication(BaseEntity):
 		# related_name='oferta aplicada',
 		# related_query_name='promotion'
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Promoción " + self.promotion.name + ", aplicada a la orden " + str(self.order_id)
 
 
 class Bill(BaseEntity):
@@ -710,6 +723,10 @@ class Bill(BaseEntity):
 		# related_name='compra',
 		# related_query_name='purchase',
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Factura " + str(self.id) + " del cliente " + str(self.ci_client) + ", del día " + str(self.date)
 
 
 class QuantityOfProducts(BaseEntity):
@@ -742,6 +759,10 @@ class QuantityOfProducts(BaseEntity):
 		# related_name='factura',
 		# related_query_name='bill'
 	)
+	
+	# Métodos
+	def __str__(self):
+		return "Cantidad de productos (" + str(self.id) + ") de la factura " + str(self.bill_id)
 
 
 class Detail(BaseEntity):
@@ -791,6 +812,9 @@ class Detail(BaseEntity):
 		# related_name='factura',
 		# related_query_name='bill'
 	)
-
-# class OrderTemp:
-#
+	
+	# Métodos
+	def __str__(self):
+		return "Detalle " + str(self.id) + " de la factura " + str(self.bill_id) + \
+		       ", con " + self.product + ": " + self.size + self.ingredients + self.name
+	
