@@ -7,83 +7,81 @@
     <title>SandwichesWeb</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/Contact-Form-Clean.css?h=c942239c91f94a6b90d67fb2496c21bf">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="/assets/css/styles.css?h=1ef9f4edf03c0ad247e505c510f71227">
+    <link rel="stylesheet" href="/assets/css/styles.css?h=95b571ac51b34320fe259a0333cda295">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-md sticky-top">
-        <div class="container"><img id="logo" src="/assets/img/logo.png?h=072e3fa6556cbfac8cec1e0c6773bdf5"><a class="navbar-brand" href="/index.html"><strong>Sándwiches&nbsp;Virtual</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><img id="logo" src="/assets/img/logo.png?h=072e3fa6556cbfac8cec1e0c6773bdf5"><a class="navbar-brand" href="/index.html"><strong>SandwichesWeb</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link active" href="/order.html" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Reportes</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div id="order-operations">
-        <div id="order-header">
-            <h1 class="text-center" id="order-number">Pedido N°</h1>
-            <p>Escoge <strong>UN&nbsp;(1)</strong>&nbsp;solo producto de la lista a continuación para cada pedido</p>
+    <div id="promo">
+        <div class="jumbotron">
+            <h1><strong>Pedido n°</strong></h1>
+            <p>Seleccione un producto de los listados a continuación</p>
         </div>
-        <div class="container" id="list-products">
-            <form>
-                <div id="combos">
-                    <h2 class="product-type">Combos</h2>
-                    <div class="form-row">
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-2"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                    </div>
+    </div>
+    <form class="dark-section">
+        <div class="form-group site-section" id="why">
+            <h1><strong>Combos</strong></h1>
+            <div class="form-row" id="why-choose-us-row">
+                <div class="col-md-4 item" id="great-taste-column"><img><a href="#" data-toggle="modal" data-target="#myModal">
+                        <h2><strong>Producto</strong></h2>
+                    </a>
+                    <p>40$</p>
                 </div>
-                <div class="form-group product-name" id="sandwiches">
-                    <h2 class="product-type">Sándwiches</h2>
-                    <div class="form-row">
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-7"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-8"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-3">
+            <h1><strong>Sándwiches</strong></h1>
+            <div class="form-row" id="why-choose-us-row-3">
+                <div class="col-md-4 item" id="great-taste-column-3"><img><a href="#">
+                        <h2>Producto</h2>
+                    </a>
+                    <p>40$</p>
                 </div>
-                <div class="form-group product-name" id="drinks">
-                    <h2 class="product-type">Bebidas</h2>
-                    <h4 class="drink-type">Jugos</h4>
-                    <div class="form-row">
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-5"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-6"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-2">
+            <h1><strong>Bebidas</strong></h1>
+            <div class="form-row" id="why-choose-us-row-2">
+                <div class="col-md-4 item" id="great-taste-column-2"><img>
+                    <h6>Jugo</h6><a href="#" data-toggle="modal" data-target="#myModal">
+                        <h2>Producto</h2>
+                    </a>
+                    <p>40$</p>
                 </div>
-                <div class="form-group product-name" id="side_dishes">
-                    <h2 class="product-type">Acompañantes</h2>
-                    <div class="form-row">
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-3"><label class="form-check-label" for="formCheck-1">Opción 1</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                        <div class="col"><img>
-                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-4"><label class="form-check-label" for="formCheck-1">Opción 2</label></div>
-                            <p><strong>$ 40</strong></p>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-1">
+            <h1><strong>Acompañantes</strong></h1>
+            <div class="form-row" id="why-choose-us-row-1">
+                <div class="col-md-4 item" id="great-taste-column-1"><img><a href="#" data-toggle="modal" data-target="#myModal">
+                        <h2>Producto</h2>
+                    </a>
+                    <p>40$</p>
                 </div>
-                <div class="btn-group" role="group"><button class="btn btn-primary" id="purchase" type="sumit">Comprar</button><button class="btn btn-primary" id="add-product" type="sumit">Agregar otro producto</button></div>
-            </form>
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Siguiente paso</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Desea realizar otro pedido?</p>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><button class="btn btn-primary" type="button">¡Sí!</button></div>
+            </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

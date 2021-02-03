@@ -73,9 +73,7 @@ def selection(request, product_id, product_type):
 	if product_type == 'sandwich':
 		selecting_sandwich(request, product_id)
 	
-	return HttpResponse("Hola, mundo. Está en selection. Opciones elegidas: " +
-	                    "Product: " + str(product_type) +
-	                    "ID: " + str(product_id))
+	return HttpResponseRedirect(reverse('sandwichesweb:client', args=()))
 
 
 def selecting_sandwich(request, sandwich_id):
@@ -84,36 +82,141 @@ def selecting_sandwich(request, sandwich_id):
 		name__exact='Queso'.capitalize(),
 		is_activated=True
 	).get()
-	additional_ingredient = Addition(ingredient=cheese, sandwich=sandwich)
 	
-	order_list[len(order_list) - 1].sandwich = sandwich
+	order = order_list[len(order_list) - 1]
+	order.sub_total = sandwich.price + cheese.price
+	
+	additional_ingredient = Addition(ingredient=cheese, sandwich=sandwich, order=order)
 	add_ing.append(additional_ingredient)
+
+
+def client_view(request):
+	template = 'sandwichesweb/client.html'
 	
-	generating_order(sandwich)
-	return HttpResponseRedirect(reverse('sandwichesweb:index'))
+	return render(request, template, {})
 
 
-class ClientView(generic.FormView):
-	template_name = ''
+def bill_view(request):
+	ci = request.POST['ci']
+	first_name = request.POST['first_name'].upper()
+	middle_name = request.POST['middle_name'].upper()
+	surname = request.POST['surname'].upper()
+	second_surname = request.POST['second_surname'].upper()
 	
+	bill = Bill(
+		ci_client=ci,
+		first_name_client=first_name,
+		middle_name_client=middle_name,
+		surname_client=surname,
+		second_surname_client=second_surname,
+	)
 	
-
-
-def generating_order(product):
-	# Primero, se crea la orden en la que se guardará el producto recibido.
-	order = Order()
+	bill = successful_purchase(bill)
+	billing(bill)
+	qops = QuantityOfProducts.objects.filter(bill=bill)
+	details = Detail.objects.filter(bill=bill)
 	
-	# Se calcula el sub_total de la orden con el producto pasado por parámetros
-	order.sub_total += product.price
+	order_list.clear()
+	add_ing.clear()
 	
-	if type(product == 'sandwichesweb.models.Sandwich'):
-		order.sandwich_id = product.id
+	return HttpResponse("lo lograste: " +
+	                    "bill: " + str(bill.id)
+	                    )
+	# return HttpResponse("Hola, nuevo cliente: " +
+	#                     "ci: " + str(ci) +
+	#                     "first_name: " + first_name +
+	#                     "middle_name: " + middle_name +
+	#                     "surname: " + surname +
+	#                     "second_surname: " + second_surname)
+
+
+def billing(bill):
+	orders_bill = Order.objects.filter(purchase=bill.purchase)
 	
-	order.save()
+	sandwiches_count = 0
+	drinks_count = 0
+	side_dishes_count = 0
+	combos_count = 0
+	for order in orders_bill:
+		detail = Detail(bill=bill)
+		
+		# Contando los sándwiches de ese pedido
+		additional_ings = Addition.objects.filter(order=order)
+		if additional_ings:
+			sandwiches_count += 1
+			detail.product = Product.ListProducts.SANDWICH.label
+			
+			n = 1
+			for ing in additional_ings:
+				if n == 1:
+					detail.ingredients += " "
+				else:
+					if n == additional_ings.count():
+						detail.ingredients += "y "
+					else:
+						detail.ingredients += ", "
+				detail.ingredients += ing.ingredient.name
+				n += 1
+				
+				if n == additional_ings.count():
+					detail.size = ing.sandwich.size
+		elif order.drink_id:
+			drinks_count += 1
+			drink = order.drink
+			
+			detail.product = Product.ListProducts.DRINK.label
+			detail.name = drink.name
+		elif order.side_dish_id:
+			side_dishes_count += 1
+			side_dish = order.side_dish
+			
+			detail.product = Product.ListProducts.SIDE_DISH.label
+			detail.name = side_dish.name
+		elif order.combo_id:
+			combos_count += 1
+			combo = order.combo
+			
+			detail.product = Product.ListProducts.COMBO.label
+			detail.name = combo.name
+		detail.price = order.sub_total
+		detail.save()
+	
+	# Cantidad por tipo de producto
+	if sandwiches_count:
+		qop = QuantityOfProducts(bill=bill)
+		qop.product = Product.ListProducts.SANDWICH.label
+		qop.quantity = sandwiches_count
+		qop.save()
+	if drinks_count:
+		qop = QuantityOfProducts(bill=bill)
+		qop.product = Product.ListProducts.DRINK.label
+		qop.quantity = drinks_count
+		qop.save()
+	if side_dishes_count:
+		qop = QuantityOfProducts(bill=bill)
+		qop.product = Product.ListProducts.SIDE_DISH.label
+		qop.quantity = side_dishes_count
+		qop.save()
+	if combos_count:
+		qop = QuantityOfProducts(bill=bill)
+		qop.product = Product.ListProducts.COMBO.label
+		qop.quantity = combos_count
+		qop.save()
 
 
-# order_list.append(order)
-
-
-def successful_purchase(order: Order, addition=None):
-	order.save()
+def successful_purchase(bill: Bill):
+	purchase = Purchase()
+	purchase.save()
+	
+	bill.total = 0
+	for order in order_list:
+		bill.total += order.sub_total
+		order.save()
+		
+	for ingredient in add_ing:  # guardando las
+		ingredient.save()
+	
+	bill.purchase = purchase
+	bill.save()
+	
+	return bill

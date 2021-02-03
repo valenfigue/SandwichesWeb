@@ -24,21 +24,44 @@
     </nav>
     <div id="promo">
         <div class="jumbotron">
-            <h1><strong>¡Bienvenido!</strong></h1>
-            <p>Esta es la tienda de sándwiches virtuales de Valentina</p>
+            <h1><strong>Pedido n°</strong></h1>
+            <p>Seleccione uno o más ingredientes, de los listados a continuación</p>
         </div>
     </div>
-    <div class="dark-section">
-        <div class="container site-section" id="why">
-            <h1><strong>Ofertas</strong></h1>
-            <div class="row" id="why-choose-us-row">
-                <div class="col-md-4 item" id="great-taste-column">
-                    <h2>Oferta</h2>
-                    <p>Descripción</p>
-                    <p><strong>precio</strong></p>
-                    <p>Aplica a:</p>
-                    <p>product</p>
+    <div class="container site-section" id="why">
+        <h1><strong>Ingredientes adicionales</strong></h1>
+        <form class="dark-section">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ingrediente</th>
+                            <th>Precio</th>
+                            <th>Seleccionados</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-break">
+                        <tr>
+                            <td>Cell 1</td>
+                            <td>Cell 2</td>
+                            <td><input type="checkbox" name="ingredient"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><a class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModal">Learn more</a></p>
+        </form>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Siguiente paso</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
+                <div class="modal-body">
+                    <p>¿Desea realizar otro pedido?</p>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">No</button><button class="btn btn-primary" type="button">¡Sí!</button></div>
             </div>
         </div>
     </div>
