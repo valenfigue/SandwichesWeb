@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>SandwichesWeb</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/Contact-Form-Clean.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md sticky-top">
+        <div class="container"><img id="logo" src="{% static 'sandwichesweb/images/logo.png' %}"><a class="navbar-brand" href="{% static 'sandwichesweb/images/logo.png' %}"><strong>SandwichesWeb</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'sandwichesweb:order' %}" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="promo">
+        <div class="jumbotron">
+            <h1><strong>Pedido n° {{ order.number }}</strong></h1>
+            <p>Seleccione un producto de los listados a continuación</p>
+        </div>
+    </div>
+    <form class="dark-section" method="post">
+{#    <form class="dark-section" action="{% url 'sandwichesweb:selection' product_id product_type decision %}" method="post">#}
+        {% csrf_token %}
+        <div class="form-group site-section" id="why">
+            <h1><strong>Combos</strong></h1>
+            <div class="form-row" id="why-choose-us-row">
+                {% for combo in combo_list %}
+                    <div class="col-md-4 item" id="great-taste-column">
+{#                        <img src="{{ combo.photo }}">#}
+                        <h2><strong>{{ combo.name }}</strong></h2>
+                        <p>{{ combo.price }}</p>
+                        <input type="radio" name="product_id" value="{{ combo.id }}"/>
+                        <input type="hidden" class="form-control" name="product_type" value="combo"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-3">
+            <h1><strong>Sándwiches</strong></h1>
+            <div class="form-row" id="why-choose-us-row-3">
+                {% for sandwich in sandwiches_list %}
+                    <div class="col-md-4 item" id="great-taste-column-3">
+{#                        <img src="{{ sandwich.photo }}">#}
+                        <h2>{{ sandwich.size }}</h2>
+                        <p>{{ sandwich.price }}</p>
+                        <input type="radio" name="product_id" value="{{ sandwich.id }}" />
+                        <input type="hidden" class="form-control" name="product_type" value="sandwich"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-2">
+            <h1><strong>Bebidas</strong></h1>
+            <div class="form-row" id="why-choose-us-row-2">
+                {% for drink in drinks_list %}
+                    <div class="col-md-4 item" id="great-taste-column-2">
+{#                        <img src="{{ drink.photo }}">#}
+                        <h6>{{ drink.drink_type }}</h6>
+                        <h2>{{ drink.name }}</h2>
+                        <p>{{ drink.price}}</p>
+                        <input type="radio" name="product_id" value="{{ drink.id }}" />
+                        <input type="hidden" class="form-control" name="product_type" value="drink"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group site-section" id="why-1">
+            <h1><strong>Acompañantes</strong></h1>
+            <div class="form-row" id="why-choose-us-row-1">
+                {% for side_dish in side_dishes_list %}
+                    <div class="col-md-4 item" id="great-taste-column-1">
+{#                        <img src="{{ side_dish.photo }}">#}
+                        <h2>{{ side_dish.name }}</h2>
+                        <p>{{ side_dish.price }}</p>
+                        <input type="radio" name="product_id" value="{{ side_dish.id }}" />
+                        <input type="hidden" class="form-control" name="product_type" value="combo"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <p style="text-align: center">
+            <a class="btn btn-primary" role="button" href="{% url 'sandwichesweb:selection' %}">
+                Nuevo pedido
+            </a>
+            <a class="btn btn-primary" role="button" href="{% url 'sandwichesweb:selection' %}">
+                Terminar
+            </a>
+        </p>
+{#        <div role="dialog" tabindex="-1" class="modal fade show" id="myModal" style="display: block;">#}
+{#            <div class="modal-dialog" role="document">#}
+{#                <div class="modal-content">#}
+{#                    <div class="modal-header">#}
+{#                        <h4 class="modal-title">Siguiente paso</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>#}
+{#                    </div>#}
+{#                    <div class="modal-body">#}
+{#                        <p><strong>¿Desea realizar otro pedido?</strong></p>#}
+{#                        <div class="form-check">#}
+{#                            <input type="radio" class="form-check-input" id="formCheck-1" name="decision" value="1" />#}
+{#                            <label class="form-check-label" for="formCheck-1">#}
+{#                                ¡Sí!#}
+{#                            </label>#}
+{#                        </div>#}
+{#                        <div class="form-check">#}
+{#                            <input type="radio" class="form-check-input" id="formCheck-2" name="decision" value="2" />#}
+{#                            <label class="form-check-label" for="formCheck-2">#}
+{#                                No#}
+{#                            </label>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="modal-footer">#}
+{#                        <a class="btn btn-primary" href="{% url 'sandwichesweb:selection' product_id product_type decision %}" role="button">#}
+{#                            Siguiente#}
+{#                        </a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'sandwichesweb/js/bs-init.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</body>
+
+</html>
