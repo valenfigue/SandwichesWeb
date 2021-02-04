@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -7,17 +8,17 @@
     <title>SandwichesWeb</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
-    <link rel="stylesheet" href="/assets/css/Contact-Form-Clean.css?h=c942239c91f94a6b90d67fb2496c21bf">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/Contact-Form-Clean.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="/assets/css/styles.css?h=95b571ac51b34320fe259a0333cda295">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/styles.css' %}">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-md sticky-top">
-        <div class="container"><img id="logo" src="/assets/img/logo.png?h=072e3fa6556cbfac8cec1e0c6773bdf5"><a class="navbar-brand" href="/index.html"><strong>SandwichesWeb</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><img id="logo" src="{% static 'sandwichesweb/images/logo.png' %}"><a class="navbar-brand" href="{% url 'sandwichesweb:index' %}"><strong>SandwichesWeb</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/order.html" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'sandwichesweb:order' %}" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
                 </ul>
             </div>
         </div>
@@ -31,20 +32,25 @@
     <div class="dark-section">
         <div class="container site-section" id="why">
             <h1><strong>Ofertas</strong></h1>
+            {% csrf_token %}
             <div class="row" id="why-choose-us-row">
-                <div class="col-md-4 item" id="great-taste-column">
-                    <h2>Oferta</h2>
-                    <p>Descripción</p>
-                    <p><strong>precio</strong></p>
-                    <p>Aplica a:</p>
-                    <p>product</p>
-                </div>
+                {% for promotion in promotions_list %}
+                    <div class="col-md-4 item" id="great-taste-column">
+                        <h2>{{ promotion.name }}</h2>
+                        <p><strong>Desde:</strong> {{ promotion.start_date }}</p>
+                        {% if promotion.end_date %}
+                            <p><strong>Hasta:</strong> {{ promotion.end_date }}</p>
+                        {% endif %}
+                        <p>{{ promotion.description }}</p>
+                        <p><strong>{{ promotion.price }}</strong></p>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/bs-init.js?h=36ffa0191e9d112d6a97bac11fc65d8e"></script>
+    <script src="{% static 'sandwichesweb/js/bs-init.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 </body>
 

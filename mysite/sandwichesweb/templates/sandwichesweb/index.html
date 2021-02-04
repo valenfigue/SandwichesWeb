@@ -8,56 +8,49 @@
     <title>SandwichesWeb</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'sandwichesweb/css/Contact-Form-Clean.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="{% static 'sandwichesweb/css/styles.css' %}">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-md sticky-top">
-        <div class="container"><img id="logo" src="{% static 'sandwichesweb/images/logo.png' %}"><a class="navbar-brand" href="{% url 'sandwichesweb:index' %}"><strong>Sándwiches&nbsp;Virtuales</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><img id="logo" src="{% static 'sandwichesweb/images/logo.png' %}"><a class="navbar-brand" href="{% url 'sandwichesweb:index' %}"><strong>SandwichesWeb</strong></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link active" href="{% url 'sandwichesweb:order' %}" style="text-shadow: 0px 0px;">¡Haz tu orden!</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Reportes</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div id="promo">
         <div class="jumbotron">
-            <h1><strong>Heading text</strong></h1>
-            <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-            <p><a class="btn btn-primary" role="button">Learn more</a></p>
+            <h1><strong>¡Bienvenido!</strong></h1>
+            <p>Esta es la tienda de sándwiches virtuales de Valentina</p>
         </div>
-    </div>
-    <div class="container site-section" id="welcome">
-        <h1>Welcome to Mon &amp; Pop´s Bakery</h1>
-        <p>Mon &amp; Pop´s bakery was founded in paris in 1993 with the mission of giving great cake to the word. our dedication and tasty cakes have won us numerous awards. Lorem ipsum dolor sit amet consectetur adipiscing elit, aenean id purus ipsum.</p>
     </div>
     <div class="dark-section">
         <div class="container site-section" id="why">
-            <h1><strong>Why Choose Us</strong></h1>
+            <h1><strong>Ofertas</strong></h1>
+            {% csrf_token %}
             <div class="row" id="why-choose-us-row">
-                <div class="col-md-4 item" data-aos="fade-up" id="great-taste-column"><i class="la la-birthday-cake"></i>
-                    <h2>Great Taste</h2>
-                    <p>Loren ipsum dolor sit amet, consectetur adipicing elit. Aenean id purus ipsum. aliquam ac orci aleifend, aliquet felis nec.</p>
-                </div>
-                <div class="col-md-4 item" id="healthy-and-organic-column"><i class="la la-heart-o"></i>
-                    <h2>Healthy &amp; Organic</h2>
-                    <p>Quisque sagittis ligula massa, nec hendrerit felis mollis ultricies. in sagittis semper condimentum.</p>
-                </div>
-                <div class="col-md-4 item" id="nest-day-delivery-column"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" class="bi bi-basket" id="basket">
-                        <path fill-rule="evenodd" d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"></path>
-                    </svg>
-                    <h2>Nest Day Delivery</h2>
-                    <p>Aliquam ac orci alerifend, aliquet felis nec, commodo alit. Quisque saguittis ligula massa, nec hendrerit felis mollis ultricies.</p>
-                </div>
+                {% for promotion in promotions_list %}
+                    <div class="col-md-4 item" id="great-taste-column">
+                        <h2>{{ promotion.name }}</h2>
+                        <p><strong>Desde:</strong> {{ promotion.start_date }}</p>
+                        {% if promotion.end_date %}
+                            <p><strong>Hasta:</strong> {{ promotion.end_date }}</p>
+                        {% endif %}
+                        <p>{{ promotion.description }}</p>
+                        <p><strong>{{ promotion.price }}</strong></p>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'sandwichesweb/bs-init.js' %}"></script>
+    <script src="{% static 'sandwichesweb/js/bs-init.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 </body>
 

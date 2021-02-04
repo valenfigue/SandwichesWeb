@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.urls import reverse
-from django.views import generic
 
 from .models import *
 
@@ -30,19 +29,16 @@ def reset_orders_dict():
 	return
 
 
-def index(request):
-	return
-
-
-# return HttpResponse("Hola, mundo. Está en el índice de encuestas.")
-
-
-class IndexView(generic.ListView):
-	template_name = 'sandwichesweb/index.html'
-	context_object_name = 'products_list'
+def index_view(request):
+	template = 'sandwichesweb/index.html'
 	
-	def get_queryset(self):
-		return None
+	promotions_list = Promotion.objects.filter(is_activated=True)
+	
+	context = {
+		'promotions_list': promotions_list,
+	}
+	
+	return render(request, template, context)
 
 
 def order_view(request, order_number=1):
@@ -69,11 +65,24 @@ def order_view(request, order_number=1):
 	return render(request, template, context)
 
 
-def selection(request, product_id, product_type):
+def selection(request):
+	product_id = request.POST['product_id']
+	product_type = request.POST['product_type']
+	decision = request.POST['decision']
+	
 	if product_type == 'sandwich':
 		selecting_sandwich(request, product_id)
-	
+
 	return HttpResponseRedirect(reverse('sandwichesweb:client', args=()))
+
+
+# def selection(request, product_id, product_type, decision):
+# 	if product_type == 'sandwich':
+# 		selecting_sandwich(request, product_id)
+# 	# else:
+#
+# 	if decision == 1:
+# 		order_list[len(order_list) - 1].number += 1
 
 
 def selecting_sandwich(request, sandwich_id):

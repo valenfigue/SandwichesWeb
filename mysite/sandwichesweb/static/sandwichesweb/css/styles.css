@@ -21,8 +21,7 @@ h1 {
 #promo {
   text-align: center;
   padding: 40px;
-  /*background: url(images/background.jpg) no-repeat;*/
-  background-color: cadetblue;
+  background: url("/mysite/sandwichesweb/static/sandwichesweb/images/background.jpg") no-repeat;
   background-size: cover;
 }
 
@@ -71,6 +70,10 @@ h1 {
   padding-top: 36px;
 }
 
+#why .img {
+  padding-top: 36px;
+}
+
 #why .item i, #basket {
   font-size: 42px;
   color: rgb(239,96,156);
@@ -86,5 +89,33 @@ h1 {
 .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
   color: rgba(0,0,0,.9);
   /*background-color: rgb(255,255,128);*/
+}
+
+.modal-header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(.3rem - 1px);
+  border-top-right-radius: calc(.3rem - 1px);
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #495057;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
